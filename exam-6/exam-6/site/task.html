@@ -1,0 +1,34 @@
+﻿@{
+Layout = "layout";
+}
+
+@if (Model == null)
+{
+<h2>Задача не найдена</h2>
+}
+else
+{
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Задача #@Model.Id</h2>
+    <div>
+        <a href="/editTask.html?id=@Model.Id" class="btn">Редактировать</a>
+        @if (Model.Status != "done")
+        {
+        <a href="/completeTask?id=@Model.Id" class="btn">Выполнить</a>
+        }
+        <a href="/confirmDelete.html?id=@Model.Id" class="btn">Удалить</a>
+    </div>
+</div>
+
+<div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-top: 15px;">
+    <p><b>Исполнитель задачи:</b> @Model.Assignee</p>
+    <p><b>Дата создания:</b> @Model.CreatedAt</p>
+    <p><b>Дата выполнения:</b> @Model.CompletedAt</p>
+    <p><b>Статус:</b> @Model.Status</p>
+
+    <h3 style="text-align: center; margin-top: 20px;">Описание задачи</h3>
+    <div style="border: 1px solid #aaa; padding: 15px; min-height: 120px; background: #fafafa;">
+        @Model.Description
+    </div>
+</div>
+}

@@ -1,0 +1,13 @@
+﻿@{
+Layout = "layout";
+}
+
+<div style="text-align: center; padding: 20px;">
+    <h2>Подтверждение удаления</h2>
+    <p>Вы действительно хотите удалить задачу <b>"@Model.Title"</b> (ID: @Model.Id)?</p>
+
+    <div style="margin-top: 20px;">
+        <a href="/deleteTask?id=@Model.Id" class="btn btn-danger" style="padding: 10px 20px; font-weight: bold;">Да, удалить</a>
+        <a href="/index.html" class="btn" style="padding: 10px 20px; margin-left: 10px;">Отмена</a>
+    </div>
+</div>

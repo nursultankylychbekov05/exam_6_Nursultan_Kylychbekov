@@ -1,0 +1,17 @@
+﻿@{
+Layout = "layout";
+}
+
+<h1 style="text-align: center; margin-bottom: 40px;">Статистика</h1>
+
+<div style="max-width: 500px; margin: 0 auto;">
+    <div class="bar-container">
+        <div class="bar" style="width: @(Model.DonePercent * 2)px; background-color: #00ffff;"></div>
+        <span style="font-weight: bold; font-size: 16px;">Выполненные задачи : @Model.DonePercent%</span>
+    </div>
+
+    <div class="bar-container">
+        <div class="bar" style="width: @(Model.NewPercent * 2)px; background-color: #ff9900;"></div>
+        <span style="font-weight: bold; font-size: 16px;">Новые задачи : @Model.NewPercent%</span>
+    </div>
+</div>

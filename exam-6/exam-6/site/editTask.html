@@ -1,0 +1,21 @@
+﻿@{
+Layout = "layout";
+}
+
+<h2>Редактирование задачи #@Model.Id</h2>
+
+<form action="/editTask" method="post" style="max-width: 500px;">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <label for="title">Заголовок</label>
+    <input type="text" id="title" name="title" value="@Model.Title" required />
+
+    <label for="assignee">Имя исполнителя</label>
+    <input type="text" id="assignee" name="assignee" value="@Model.Assignee" required />
+
+    <label for="description">Описание задачи</label>
+    <textarea id="description" name="description" rows="5" required style="width: 100%; box-sizing: border-box;">@Model.Description</textarea>
+
+    <button type="submit" class="btn btn-success" style="padding: 10px; margin-top: 10px;">Сохранить изменения</button>
+    <a href="/task.html?id=@Model.Id" class="btn">Отмена</a>
+</form>
