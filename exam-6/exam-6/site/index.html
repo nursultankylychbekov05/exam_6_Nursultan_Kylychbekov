@@ -14,6 +14,7 @@ Layout = "layout";
                 <th>Имя исполнителя</th>
                 <th>Дата создания</th>
                 <th>Статус</th>
+                <th>Действия</th>
             </tr>
             </thead>
             <tbody>
@@ -29,6 +30,13 @@ Layout = "layout";
                 <td>@task.Assignee</td>
                 <td>@task.CreatedAt</td>
                 <td>@task.Status</td>
+                <td>
+                    @if (task.Status == "new")
+                    {
+                    <a href="/completeTask?id=@task.Id" style="color: green; text-decoration: none; margin-right: 8px;">✓ Завершить</a>
+                    }
+                    <a href="/deleteTask?id=@task.Id" style="color: red; text-decoration: none;">✗ Удалить</a>
+                </td>
             </tr>
             }
             </tbody>

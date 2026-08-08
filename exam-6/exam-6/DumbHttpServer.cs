@@ -45,6 +45,26 @@ public class DumbHttpServer
 
         string pageName = Path.GetFileName(absolutePath);
         string httpMethod = context.Request.HttpMethod;
+        
+        if (pageName.Equals("completeTask", StringComparison.OrdinalIgnoreCase))
+        {
+            if (int.TryParse(context.Request.QueryString["id"], out int taskId))
+            {
+                CompleteTask(taskId);
+            }
+            Redirect(context, "/index.html");
+            return;
+        }
+
+        if (pageName.Equals("deleteTask", StringComparison.OrdinalIgnoreCase))
+        {
+            if (int.TryParse(context.Request.QueryString["id"], out int taskId))
+            {
+                DeleteTask(taskId);
+            }
+            Redirect(context, "/index.html");
+            return;
+        }
 
         if (httpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) && pageName.Equals("addTask", StringComparison.OrdinalIgnoreCase))
         {
@@ -109,7 +129,7 @@ public class DumbHttpServer
         }
 
         var tasks = ReadTasks();
-        
+
         if (Path.GetFileName(filename).Equals("task.html", StringComparison.OrdinalIgnoreCase))
         {
             string? idStr = request.QueryString["id"];
@@ -143,6 +163,29 @@ public class DumbHttpServer
         string jsonPath = Path.Combine(_siteDirectory, "tasks.json");
         string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(jsonPath, json);
+    }
+
+    private void CompleteTask(int id)
+    {
+        var tasks = ReadTasks();
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+        if (task != null)
+        {
+            task.Status = "done";
+            task.CompletedAt = DateTime.Now.ToString("dd.MM.yyyy");
+            SaveTasks(tasks);
+        }
+    }
+
+    private void DeleteTask(int id)
+    {
+        var tasks = ReadTasks();
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+        if (task != null)
+        {
+            tasks.Remove(task);
+            SaveTasks(tasks);
+        }
     }
 
     private void AddTask(HttpListenerRequest request)
