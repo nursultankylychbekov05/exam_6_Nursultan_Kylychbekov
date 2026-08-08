@@ -4,56 +4,26 @@ Layout = "layout";
 
 <h2 style="text-align: center;">Список Задач</h2>
 
-<div style="display: flex; gap: 30px;">
-    <!-- Таблица задач -->
-    <div style="flex: 2;">
-        <table>
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Заголовок</th>
-                <th>Имя исполнителя</th>
-                <th>Дата создания</th>
-                <th>Статус</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var task in Model)
-            {
-            <tr>
-                <td>@task.Id</td>
-                <td><a href="/task.html?id=@task.Id" style="font-weight: bold; text-decoration: none; color: #007bff;">@task.Title</a></td>
-                <td>@task.Assignee</td>
-                <td>@task.CreatedAt</td>
-                <td>@task.Status</td>
-                <td>
-                    @if (task.Status != "done")
-                    {
-                    <a href="/completeTask?id=@task.Id" class="btn">Выполнить</a>
-                    }
-                    <a href="/confirmDelete.html?id=@task.Id" class="btn">Удалить</a>
-                </td>
-            </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Форма добавления -->
-    <div style="flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px; height: fit-content;">
-        <h3 style="margin-top: 0; text-align: center;">Добавить новую</h3>
-        <form action="/addTask" method="post">
-            <label for="title">Заголовок</label>
-            <input type="text" id="title" name="title" required />
-
-            <label for="assignee">Имя исполнителя</label>
-            <input type="text" id="assignee" name="assignee" required />
-
-            <label for="description">Описание задачи</label>
-            <textarea id="description" name="description" rows="5" required style="width: 100%; box-sizing: border-box;"></textarea>
-
-            <button type="submit" class="btn" style="width: 100%; margin-top: 10px; padding: 10px; font-weight: bold;">Добавить</button>
-        </form>
-    </div>
-</div>
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Заголовок</th>
+        <th>Имя исполнителя</th>
+        <th>Дата создания</th>
+        <th>Статус</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var task in Model)
+    {
+    <tr>
+        <td>@task.Id</td>
+        <td>@task.Title</td>
+        <td>@task.Assignee</td>
+        <td>@task.CreatedAt</td>
+        <td>@task.Status</td>
+    </tr>
+    }
+    </tbody>
+</table>
