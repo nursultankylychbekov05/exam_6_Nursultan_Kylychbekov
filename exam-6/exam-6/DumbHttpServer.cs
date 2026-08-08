@@ -43,6 +43,16 @@ public class DumbHttpServer
         string absolutePath = context.Request.Url?.AbsolutePath ?? "/";
         if (absolutePath == "/") absolutePath = "/index.html";
 
+        string pageName = Path.GetFileName(absolutePath);
+        string httpMethod = context.Request.HttpMethod;
+        
+        if (httpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) && pageName.Equals("addTask", StringComparison.OrdinalIgnoreCase))
+        {
+            AddTask(context.Request);
+            Redirect(context, "/index.html");
+            return;
+        }
+
         string relativePath = absolutePath.TrimStart('/');
         string filePath = Path.Combine(_siteDirectory, relativePath);
 
@@ -76,6 +86,12 @@ public class DumbHttpServer
         context.Response.OutputStream.Close();
     }
 
+    private void Redirect(HttpListenerContext context, string url)
+    {
+        context.Response.Redirect(url);
+        context.Response.OutputStream.Close();
+    }
+
     private string BuildHtml(string filename)
     {
         string layoutPath = Path.Combine(_siteDirectory, "layout.html");
@@ -106,6 +122,54 @@ public class DumbHttpServer
         {
             PropertyNameCaseInsensitive = true
         }) ?? new List<TodoTask>();
+    }
+
+    private void SaveTasks(List<TodoTask> tasks)
+    {
+        string jsonPath = Path.Combine(_siteDirectory, "tasks.json");
+        string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(jsonPath, json);
+    }
+
+    private void AddTask(HttpListenerRequest request)
+    {
+        using var reader = new StreamReader(request.InputStream, request.ContentEncoding);
+        var formData = ParseFormData(reader.ReadToEnd());
+
+        var tasks = ReadTasks();
+        int newId = tasks.Count > 0 ? tasks.Max(t => t.Id) + 1 : 1;
+
+        var newTask = new TodoTask
+        {
+            Id = newId,
+            Title = formData.GetValueOrDefault("title") ?? "",
+            Assignee = formData.GetValueOrDefault("assignee") ?? "",
+            Description = formData.GetValueOrDefault("description") ?? "",
+            CreatedAt = DateTime.Now.ToString("dd.MM.yyyy"),
+            CompletedAt = "-",
+            Status = "new"
+        };
+
+        tasks.Add(newTask);
+        SaveTasks(tasks);
+    }
+
+    private Dictionary<string, string> ParseFormData(string body)
+    {
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var pairs = body.Split('&', StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var pair in pairs)
+        {
+            var parts = pair.Split('=');
+            if (parts.Length == 2)
+            {
+                string key = WebUtility.UrlDecode(parts[0]);
+                string value = WebUtility.UrlDecode(parts[1]).Replace('+', ' ');
+                result[key] = value;
+            }
+        }
+        return result;
     }
 
     private string GetContentType(string filename)

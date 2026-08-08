@@ -4,26 +4,46 @@ Layout = "layout";
 
 <h2 style="text-align: center;">Список Задач</h2>
 
-<table>
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Заголовок</th>
-        <th>Имя исполнителя</th>
-        <th>Дата создания</th>
-        <th>Статус</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var task in Model)
-    {
-    <tr>
-        <td>@task.Id</td>
-        <td>@task.Title</td>
-        <td>@task.Assignee</td>
-        <td>@task.CreatedAt</td>
-        <td>@task.Status</td>
-    </tr>
-    }
-    </tbody>
-</table>
+<div style="display: flex; gap: 30px;">
+    <div style="flex: 2;">
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Заголовок</th>
+                <th>Имя исполнителя</th>
+                <th>Дата создания</th>
+                <th>Статус</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var task in Model)
+            {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Title</td>
+                <td>@task.Assignee</td>
+                <td>@task.CreatedAt</td>
+                <td>@task.Status</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px; height: fit-content;">
+        <h3 style="margin-top: 0; text-align: center;">Добавить новую</h3>
+        <form action="/addTask" method="post">
+            <label for="title">Заголовок</label>
+            <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;" />
+
+            <label for="assignee">Имя исполнителя</label>
+            <input type="text" id="assignee" name="assignee" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;" />
+
+            <label for="description">Описание задачи</label>
+            <textarea id="description" name="description" rows="5" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;"></textarea>
+
+            <button type="submit" style="width: 100%; padding: 10px; background: #e0e0e0; border: 1px solid #333; cursor: pointer; font-weight: bold;">Добавить</button>
+        </form>
+    </div>
+</div>
