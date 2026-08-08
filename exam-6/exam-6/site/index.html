@@ -31,11 +31,13 @@ Layout = "layout";
                 <td>@task.CreatedAt</td>
                 <td>@task.Status</td>
                 <td>
-                    @if (task.Status == "new")
-                    {
-                    <a href="/completeTask?id=@task.Id" style="color: green; text-decoration: none; margin-right: 8px;">✓ Завершить</a>
-                    }
-                    <a href="/deleteTask?id=@task.Id" style="color: red; text-decoration: none;">✗ Удалить</a>
+                    <div class="actions-group">
+                        @if (task.Status == "new")
+                        {
+                        <a href="/completeTask?id=@task.Id" class="btn-action btn-done">Выполнить</a>
+                        }
+                        <a href="/confirmDelete.html?id=@task.Id" class="btn-action btn-delete">Удалить</a>
+                    </div>
                 </td>
             </tr>
             }

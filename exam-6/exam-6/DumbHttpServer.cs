@@ -45,7 +45,7 @@ public class DumbHttpServer
 
         string pageName = Path.GetFileName(absolutePath);
         string httpMethod = context.Request.HttpMethod;
-        
+
         if (pageName.Equals("completeTask", StringComparison.OrdinalIgnoreCase))
         {
             if (int.TryParse(context.Request.QueryString["id"], out int taskId))
@@ -69,6 +69,13 @@ public class DumbHttpServer
         if (httpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) && pageName.Equals("addTask", StringComparison.OrdinalIgnoreCase))
         {
             AddTask(context.Request);
+            Redirect(context, "/index.html");
+            return;
+        }
+
+        if (httpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) && pageName.Equals("saveEditedTask", StringComparison.OrdinalIgnoreCase))
+        {
+            SaveEditedTask(context.Request);
             Redirect(context, "/index.html");
             return;
         }
@@ -129,11 +136,11 @@ public class DumbHttpServer
         }
 
         var tasks = ReadTasks();
-
-        if (Path.GetFileName(filename).Equals("task.html", StringComparison.OrdinalIgnoreCase))
+        string name = Path.GetFileName(filename);
+        
+        if (name.Equals("task.html", StringComparison.OrdinalIgnoreCase) || name.Equals("editTask.html", StringComparison.OrdinalIgnoreCase) || name.Equals("confirmDelete.html", StringComparison.OrdinalIgnoreCase))
         {
-            string? idStr = request.QueryString["id"];
-            if (int.TryParse(idStr, out int taskId))
+            if (int.TryParse(request.QueryString["id"], out int taskId))
             {
                 var task = tasks.FirstOrDefault(t => t.Id == taskId);
                 if (task != null)
@@ -141,6 +148,23 @@ public class DumbHttpServer
                     return razorService.Run(filename, null, task);
                 }
             }
+        }
+        
+        if (name.Equals("stats.html", StringComparison.OrdinalIgnoreCase))
+        {
+            var stats = new StatsViewModel
+            {
+                TotalCount = tasks.Count,
+                DoneCount = tasks.Count(t => t.Status == "done"),
+                NewCount = tasks.Count(t => t.Status == "new")
+            };
+            return razorService.Run(filename, null, stats);
+        }
+        
+        string? statusFilter = request.QueryString["status"];
+        if (!string.IsNullOrEmpty(statusFilter))
+        {
+            tasks = tasks.Where(t => t.Status.Equals(statusFilter, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         return razorService.Run(filename, null, tasks);
@@ -209,6 +233,25 @@ public class DumbHttpServer
 
         tasks.Add(newTask);
         SaveTasks(tasks);
+    }
+
+    private void SaveEditedTask(HttpListenerRequest request)
+    {
+        using var reader = new StreamReader(request.InputStream, request.ContentEncoding);
+        var formData = ParseFormData(reader.ReadToEnd());
+
+        if (int.TryParse(formData.GetValueOrDefault("id"), out int id))
+        {
+            var tasks = ReadTasks();
+            var task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task != null)
+            {
+                task.Title = formData.GetValueOrDefault("title") ?? task.Title;
+                task.Assignee = formData.GetValueOrDefault("assignee") ?? task.Assignee;
+                task.Description = formData.GetValueOrDefault("description") ?? task.Description;
+                SaveTasks(tasks);
+            }
+        }
     }
 
     private Dictionary<string, string> ParseFormData(string body)

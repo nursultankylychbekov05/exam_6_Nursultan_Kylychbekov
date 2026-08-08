@@ -2,9 +2,9 @@
 
 public class StatsViewModel
 {
-    public int TotalTasks { get; set; }
-    public int DoneTasks { get; set; }
-    public int NewTasks { get; set; }
-    public int DonePercent { get; set; }
-    public int NewPercent { get; set; }
+    public int TotalCount { get; set; }
+    public int DoneCount { get; set; }
+    public int NewCount { get; set; }
+    public double DonePercentage => TotalCount > 0 ? Math.Round((double)DoneCount / TotalCount * 100, 1) : 0;
+    public double NewPercentage => TotalCount > 0 ? Math.Round((double)NewCount / TotalCount * 100, 1) : 0;
 }

@@ -2,20 +2,21 @@
 Layout = "layout";
 }
 
-<h2>Редактирование задачи #@Model.Id</h2>
+<h2 style="text-align: center;">Редактирование задачи №@Model.Id</h2>
 
-<form action="/editTask" method="post" style="max-width: 500px;">
-    <input type="hidden" name="id" value="@Model.Id" />
+<div style="border: 1px solid #ccc; padding: 20px; border-radius: 5px; background: #fff; max-width: 500px; margin: 0 auto;">
+    <form action="/saveEditedTask" method="post">
+        <input type="hidden" name="id" value="@Model.Id" />
 
-    <label for="title">Заголовок</label>
-    <input type="text" id="title" name="title" value="@Model.Title" required />
+        <label for="title">Заголовок</label>
+        <input type="text" id="title" name="title" value="@Model.Title" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;" />
 
-    <label for="assignee">Имя исполнителя</label>
-    <input type="text" id="assignee" name="assignee" value="@Model.Assignee" required />
+        <label for="assignee">Исполнитель</label>
+        <input type="text" id="assignee" name="assignee" value="@Model.Assignee" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;" />
 
-    <label for="description">Описание задачи</label>
-    <textarea id="description" name="description" rows="5" required style="width: 100%; box-sizing: border-box;">@Model.Description</textarea>
+        <label for="description">Описание</label>
+        <textarea id="description" name="description" rows="5" required style="width: 100%; padding: 8px; margin: 4px 0 12px; box-sizing: border-box;">@Model.Description</textarea>
 
-    <button type="submit" class="btn btn-success" style="padding: 10px; margin-top: 10px;">Сохранить изменения</button>
-    <a href="/task.html?id=@Model.Id" class="btn">Отмена</a>
-</form>
+        <button type="submit" style="width: 100%; padding: 10px; background: #0066cc; color: white; border: none; cursor: pointer; font-weight: bold;">Сохранить изменения</button>
+    </form>
+</div>

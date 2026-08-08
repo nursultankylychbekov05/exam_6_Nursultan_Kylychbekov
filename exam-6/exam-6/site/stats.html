@@ -2,16 +2,18 @@
 Layout = "layout";
 }
 
-<h1 style="text-align: center; margin-bottom: 40px;">Статистика</h1>
+<h2 style="text-align: center;">Статистика задач</h2>
 
-<div style="max-width: 500px; margin: 0 auto;">
-    <div class="bar-container">
-        <div class="bar" style="width: @(Model.DonePercent * 2)px; background-color: #00ffff;"></div>
-        <span style="font-weight: bold; font-size: 16px;">Выполненные задачи : @Model.DonePercent%</span>
+<div style="max-width: 600px; margin: 20px auto; border: 1px solid #ccc; padding: 20px; border-radius: 5px;">
+    <p><strong>Всего задач:</strong> @Model.TotalCount</p>
+
+    <p style="margin-bottom: 5px;"><strong>Выполнено:</strong> @Model.DoneCount (@Model.DonePercentage%)</p>
+    <div style="background: #e0e0e0; border-radius: 4px; overflow: hidden; height: 22px; margin-bottom: 20px;">
+        <div style="background: #4CAF50; width: @Model.DonePercentage%; height: 100%;"></div>
     </div>
 
-    <div class="bar-container">
-        <div class="bar" style="width: @(Model.NewPercent * 2)px; background-color: #ff9900;"></div>
-        <span style="font-weight: bold; font-size: 16px;">Новые задачи : @Model.NewPercent%</span>
+    <p style="margin-bottom: 5px;"><strong>Новые задачи:</strong> @Model.NewCount (@Model.NewPercentage%)</p>
+    <div style="background: #e0e0e0; border-radius: 4px; overflow: hidden; height: 22px;">
+        <div style="background: #007bff; width: @Model.NewPercentage%; height: 100%;"></div>
     </div>
 </div>
