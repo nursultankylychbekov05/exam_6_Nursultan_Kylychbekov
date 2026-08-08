@@ -45,7 +45,7 @@ public class DumbHttpServer
 
         string pageName = Path.GetFileName(absolutePath);
         string httpMethod = context.Request.HttpMethod;
-        
+
         if (httpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) && pageName.Equals("addTask", StringComparison.OrdinalIgnoreCase))
         {
             AddTask(context.Request);
@@ -61,7 +61,7 @@ public class DumbHttpServer
             try
             {
                 string content = filePath.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
-                    ? BuildHtml(filePath)
+                    ? BuildHtml(filePath, context.Request)
                     : File.ReadAllText(filePath);
 
                 context.Response.ContentType = GetContentType(filePath);
@@ -92,7 +92,7 @@ public class DumbHttpServer
         context.Response.OutputStream.Close();
     }
 
-    private string BuildHtml(string filename)
+    private string BuildHtml(string filename, HttpListenerRequest request)
     {
         string layoutPath = Path.Combine(_siteDirectory, "layout.html");
         var razorService = Engine.Razor;
@@ -109,6 +109,20 @@ public class DumbHttpServer
         }
 
         var tasks = ReadTasks();
+        
+        if (Path.GetFileName(filename).Equals("task.html", StringComparison.OrdinalIgnoreCase))
+        {
+            string? idStr = request.QueryString["id"];
+            if (int.TryParse(idStr, out int taskId))
+            {
+                var task = tasks.FirstOrDefault(t => t.Id == taskId);
+                if (task != null)
+                {
+                    return razorService.Run(filename, null, task);
+                }
+            }
+        }
+
         return razorService.Run(filename, null, tasks);
     }
 

@@ -2,33 +2,19 @@
 Layout = "layout";
 }
 
-@if (Model == null)
-{
-<h2>Задача не найдена</h2>
-}
-else
-{
-<div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>Задача #@Model.Id</h2>
-    <div>
-        <a href="/editTask.html?id=@Model.Id" class="btn">Редактировать</a>
-        @if (Model.Status != "done")
-        {
-        <a href="/completeTask?id=@Model.Id" class="btn">Выполнить</a>
-        }
-        <a href="/confirmDelete.html?id=@Model.Id" class="btn">Удалить</a>
+<h2 style="text-align: center;">Информация о задаче №@Model.Id</h2>
+
+<div style="border: 1px solid #ccc; padding: 20px; border-radius: 5px; background: #fff; max-width: 600px; margin: 0 auto;">
+    <p><strong>Заголовок:</strong> @Model.Title</p>
+    <p><strong>Исполнитель:</strong> @Model.Assignee</p>
+    <p><strong>Дата создания:</strong> @Model.CreatedAt</p>
+    <p><strong>Дата завершения:</strong> @Model.CompletedAt</p>
+    <p><strong>Статус:</strong> @Model.Status</p>
+
+    <p><strong>Описание:</strong></p>
+    <div style="background: #f9f9f9; padding: 12px; border: 1px solid #eee; border-radius: 4px; min-height: 80px; white-space: pre-wrap;">@Model.Description</div>
+
+    <div style="margin-top: 20px;">
+        <a href="/index.html" style="text-decoration: none; color: #0066cc; font-weight: bold;">← Вернуться к списку</a>
     </div>
 </div>
-
-<div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; margin-top: 15px;">
-    <p><b>Исполнитель задачи:</b> @Model.Assignee</p>
-    <p><b>Дата создания:</b> @Model.CreatedAt</p>
-    <p><b>Дата выполнения:</b> @Model.CompletedAt</p>
-    <p><b>Статус:</b> @Model.Status</p>
-
-    <h3 style="text-align: center; margin-top: 20px;">Описание задачи</h3>
-    <div style="border: 1px solid #aaa; padding: 15px; min-height: 120px; background: #fafafa;">
-        @Model.Description
-    </div>
-</div>
-}

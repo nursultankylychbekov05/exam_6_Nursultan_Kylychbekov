@@ -21,7 +21,11 @@ Layout = "layout";
             {
             <tr>
                 <td>@task.Id</td>
-                <td>@task.Title</td>
+                <td>
+                    <a href="/task.html?id=@task.Id" style="color: #0066cc; text-decoration: none; font-weight: bold;">
+                        @task.Title
+                    </a>
+                </td>
                 <td>@task.Assignee</td>
                 <td>@task.CreatedAt</td>
                 <td>@task.Status</td>
@@ -30,7 +34,7 @@ Layout = "layout";
             </tbody>
         </table>
     </div>
-    
+
     <div style="flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px; height: fit-content;">
         <h3 style="margin-top: 0; text-align: center;">Добавить новую</h3>
         <form action="/addTask" method="post">
